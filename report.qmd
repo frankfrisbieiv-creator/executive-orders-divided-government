@@ -61,8 +61,8 @@ The hypothesis and the full model specification were frozen **before any data wa
 
 Every number here traces to a public source:
 
-- **Executive orders** — the Federal Register API, 1953–2025, counted by signing date.
-- **Party control of each chamber** — *derived*, not hand-typed, from [voteview.com](https://voteview.com) member records (the canonical DW-NOMINATE data).
+- **Executive orders** — the complete 1953–2025 record, counted by signing date. The Federal Register's search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.
+- **Party control of each chamber** — hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against [voteview.com](https://voteview.com) DW-NOMINATE records.
 - **Presidential party** — a 14-row administrations table.
 
 A year is coded **divided** when the president's party does not control *both* chambers.
@@ -97,6 +97,8 @@ In the pre-registered primary model (negative binomial), a divided-government ye
 
 **The data `r verdict`**
 
+This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer" — see the Bottom line.
+
 Full coefficient table for the primary specification:
 
 ```{r primary-table}
@@ -128,6 +130,7 @@ purrr::map_dfr(names(models), \(nm) {
 - **EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.
 - **Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.
 - **Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.
+- **Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap — which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.
 
 ## Reproduce this
 
