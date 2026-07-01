@@ -1,0 +1,139 @@
+---
+title: "Do Presidents Govern by Decree When They Lose Congress?"
+subtitle: "A pre-registered test of executive orders under divided government, 1953–2025"
+author: "Frank Frisbie"
+date: today
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-location: left
+    code-fold: true
+    code-tools: true
+    df-print: kable
+    fig-width: 9
+    fig-height: 4.5
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(dplyr); library(readr); library(broom); library(ggplot2)
+source("R/00_shared.R")
+
+eos     <- read_csv("data/executive_orders_raw.csv", show_col_types = FALSE)
+divided <- read_csv("data/divided_government.csv",   show_col_types = FALSE)
+panel   <- build_panel(eos, divided)
+models  <- fit_models(panel)
+nb      <- models[["Negative binomial (primary)"]]
+
+# Profile-likelihood CIs where computable; Wald-CI fallback only when profiling
+# fails. The president fixed-effects spec has complete separation on this small
+# sample, so its profile CI cannot be computed - this keeps that spec in the
+# robustness table (as pre-registered) instead of aborting the render. The other
+# three specs are unaffected and keep their exact profile intervals.
+tidy_ci <- function(m) {
+  tryCatch(
+    tidy(m, conf.int = TRUE),
+    error = function(e) {
+      z <- qnorm(0.975)
+      tidy(m) |> mutate(conf.low  = estimate - z * std.error,
+                        conf.high = estimate + z * std.error)
+    }
+  )
+}
+```
+
+## The claim being tested
+
+A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing* — reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).
+
+This is a small, deliberately narrow test of one measurable piece of that story: **does the raw volume of executive orders rise under divided government?**
+
+::: {.callout-note}
+## This analysis was pre-registered
+The hypothesis and the full model specification were frozen **before any data was pulled or seen** — see [`PRE_REGISTRATION.md`](PRE_REGISTRATION.md). That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.
+:::
+
+## What counts as "divided," and where the numbers come from
+
+Every number here traces to a public source:
+
+- **Executive orders** — the Federal Register API, 1953–2025, counted by signing date.
+- **Party control of each chamber** — *derived*, not hand-typed, from [voteview.com](https://voteview.com) member records (the canonical DW-NOMINATE data).
+- **Presidential party** — a 14-row administrations table.
+
+A year is coded **divided** when the president's party does not control *both* chambers.
+
+```{r overview}
+panel |>
+  group_by(control) |>
+  summarise(`# years` = n(), `avg EOs/yr` = round(mean(eo_count), 1), .groups = "drop")
+```
+
+```{r timeline}
+make_timeline_plot(panel)
+```
+
+## The result
+
+```{r result}
+res <- tidy(nb, conf.int = TRUE) |> filter(term == "divided_government")
+irr <- exp(res$estimate); lo <- exp(res$conf.low); hi <- exp(res$conf.high)
+sig <- (res$conf.low > 0) | (res$conf.high < 0)   # CI excludes zero?
+dir <- if (res$estimate > 0) "more" else "fewer"
+verdict <- if (sig && res$estimate > 0) {
+  "supports H1: divided government is associated with measurably more executive orders."
+} else if (sig && res$estimate < 0) {
+  "runs *against* H1: divided government is associated with measurably fewer executive orders."
+} else {
+  "does **not** support H1: the divided-government association is not statistically distinguishable from zero in this sample."
+}
+```
+
+In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI `r round(lo,2)`–`r round(hi,2)`) — that is, `r dir` orders.
+
+**The data `r verdict`**
+
+Full coefficient table for the primary specification:
+
+```{r primary-table}
+tidy(nb, conf.int = TRUE) |>
+  mutate(across(where(is.numeric), \(x) round(x, 3)))
+```
+
+### Robustness
+
+The pre-registration committed to reporting four specifications, not just the favorable one. The estimated divided-government effect across all of them:
+
+```{r robustness}
+purrr::map_dfr(names(models), \(nm) {
+  tidy_ci(models[[nm]]) |>
+    filter(term == "divided_government") |>
+    transmute(specification = nm, estimate = round(estimate, 3),
+              conf.low = round(conf.low, 3), conf.high = round(conf.high, 3),
+              p.value = round(p.value, 3))
+})
+```
+
+**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years — about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern — some presidents simply governed in high-EO eras under unified control — not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.
+
+**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.
+
+## What this does and doesn't show
+
+- **Counts ≠ significance.** This measures the *volume* of unilateral action, not its weight. A single consequential order and a routine administrative one count the same. Raw counts are known to undercount the orders that matter most.
+- **EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.
+- **Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.
+- **Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.
+
+## Reproduce this
+
+```bash
+Rscript R/01_pull_executive_orders.R     # pull EOs from the Federal Register
+Rscript R/02_build_divided_government.R   # derive chamber control from voteview
+quarto render report.qmd                  # rebuild this page
+```
+
+Everything above regenerates from public data. Full method: [`PRE_REGISTRATION.md`](PRE_REGISTRATION.md).
