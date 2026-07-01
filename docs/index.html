@@ -876,138 +876,139 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> today</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: left</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: kable</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 9</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 4.5</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup}</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr); <span class="fu">library</span>(readr); <span class="fu">library</span>(broom); <span class="fu">library</span>(ggplot2)</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/00_shared.R"</span>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>eos     <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/executive_orders_raw.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>divided <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/divided_government.csv"</span>,   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>panel   <span class="ot">&lt;-</span> <span class="fu">build_panel</span>(eos, divided)</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>models  <span class="ot">&lt;-</span> <span class="fu">fit_models</span>(panel)</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>nb      <span class="ot">&lt;-</span> models[[<span class="st">"Negative binomial (primary)"</span>]]</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Profile-likelihood CIs where computable; Wald-CI fallback only when profiling</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># fails. The president fixed-effects spec has complete separation on this small</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co"># sample, so its profile CI cannot be computed - this keeps that spec in the</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># robustness table (as pre-registered) instead of aborting the render. The other</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># three specs are unaffected and keep their exact profile intervals.</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>tidy_ci <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>(</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>(m, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>      z <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tidy</span>(m) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">conf.low  =</span> estimate <span class="sc">-</span> z <span class="sc">*</span> std.error,</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>                        <span class="at">conf.high =</span> estimate <span class="sc">+</span> z <span class="sc">*</span> std.error)</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## The claim being tested</span></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing* — reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).</span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>This is a small, deliberately narrow test of one measurable piece of that story: **does the raw volume of executive orders rise under divided government?**</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## This analysis was pre-registered</span></span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>The hypothesis and the full model specification were frozen **before any data was pulled or seen** — see <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>. That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="fu">## What counts as "divided," and where the numbers come from</span></span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>Every number here traces to a public source:</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Executive orders** — the Federal Register API, 1953–2025, counted by signing date.</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Party control of each chamber** — *derived*, not hand-typed, from <span class="co">[</span><span class="ot">voteview.com</span><span class="co">](https://voteview.com)</span> member records (the canonical DW-NOMINATE data).</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Presidential party** — a 14-row administrations table.</span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>A year is coded **divided** when the president's party does not control *both* chambers.</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r overview}</span></span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>panel <span class="sc">|&gt;</span></span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(control) <span class="sc">|&gt;</span></span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at"># years</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(), <span class="st">`</span><span class="at">avg EOs/yr</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(eo_count), <span class="dv">1</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r timeline}</span></span>
-<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a><span class="fu">make_timeline_plot</span>(panel)</span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## The result</span></span>
-<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r result}</span></span>
-<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tidy</span>(nb, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"divided_government"</span>)</span>
-<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>irr <span class="ot">&lt;-</span> <span class="fu">exp</span>(res<span class="sc">$</span>estimate); lo <span class="ot">&lt;-</span> <span class="fu">exp</span>(res<span class="sc">$</span>conf.low); hi <span class="ot">&lt;-</span> <span class="fu">exp</span>(res<span class="sc">$</span>conf.high)</span>
-<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>sig <span class="ot">&lt;-</span> (res<span class="sc">$</span>conf.low <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|</span> (res<span class="sc">$</span>conf.high <span class="sc">&lt;</span> <span class="dv">0</span>)   <span class="co"># CI excludes zero?</span></span>
-<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="cf">if</span> (res<span class="sc">$</span>estimate <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="st">"more"</span> <span class="cf">else</span> <span class="st">"fewer"</span></span>
-<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>verdict <span class="ot">&lt;-</span> <span class="cf">if</span> (sig <span class="sc">&amp;&amp;</span> res<span class="sc">$</span>estimate <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>  <span class="st">"supports H1: divided government is associated with measurably more executive orders."</span></span>
-<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (sig <span class="sc">&amp;&amp;</span> res<span class="sc">$</span>estimate <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
-<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>  <span class="st">"runs *against* H1: divided government is associated with measurably fewer executive orders."</span></span>
-<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>  <span class="st">"does **not** support H1: the divided-government association is not statistically distinguishable from zero in this sample."</span></span>
-<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI <span class="in">`r round(lo,2)`</span>–<span class="in">`r round(hi,2)`</span>) — that is, <span class="in">`r dir`</span> orders.</span>
-<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>**The data `r verdict`**</span>
-<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>Full coefficient table for the primary specification:</span>
-<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r primary-table}</span></span>
-<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(nb, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)))</span>
-<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a><span class="fu">### Robustness</span></span>
-<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a>The pre-registration committed to reporting four specifications, not just the favorable one. The estimated divided-government effect across all of them:</span>
-<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r robustness}</span></span>
-<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">names</span>(models), \(nm) {</span>
-<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_ci</span>(models[[nm]]) <span class="sc">|&gt;</span></span>
-<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"divided_government"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(<span class="at">specification =</span> nm, <span class="at">estimate =</span> <span class="fu">round</span>(estimate, <span class="dv">3</span>),</span>
-<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>              <span class="at">conf.low =</span> <span class="fu">round</span>(conf.low, <span class="dv">3</span>), <span class="at">conf.high =</span> <span class="fu">round</span>(conf.high, <span class="dv">3</span>),</span>
-<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>              <span class="at">p.value =</span> <span class="fu">round</span>(p.value, <span class="dv">3</span>))</span>
-<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years — about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern — some presidents simply governed in high-EO eras under unified control — not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.</span>
-<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a>**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.</span>
-<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a><span class="fu">## What this does and doesn't show</span></span>
-<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Counts ≠ significance.** This measures the *volume* of unilateral action, not its weight. A single consequential order and a routine administrative one count the same. Raw counts are known to undercount the orders that matter most.</span>
-<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.</span>
-<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.</span>
-<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.</span>
-<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reproduce this</span></span>
-<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
-<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_pull_executive_orders.R     <span class="co"># pull EOs from the Federal Register</span></span>
-<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_build_divided_government.R   <span class="co"># derive chamber control from voteview</span></span>
-<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render report.qmd                  <span class="co"># rebuild this page</span></span>
-<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a>Everything above regenerates from public data. Full method: <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: index.html</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: left</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: kable</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 9</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 4.5</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup}</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr); <span class="fu">library</span>(readr); <span class="fu">library</span>(broom); <span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/00_shared.R"</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>eos     <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/executive_orders_raw.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>divided <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/divided_government.csv"</span>,   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>panel   <span class="ot">&lt;-</span> <span class="fu">build_panel</span>(eos, divided)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>models  <span class="ot">&lt;-</span> <span class="fu">fit_models</span>(panel)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>nb      <span class="ot">&lt;-</span> models[[<span class="st">"Negative binomial (primary)"</span>]]</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Profile-likelihood CIs where computable; Wald-CI fallback only when profiling</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co"># fails. The president fixed-effects spec has complete separation on this small</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># sample, so its profile CI cannot be computed - this keeps that spec in the</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># robustness table (as pre-registered) instead of aborting the render. The other</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co"># three specs are unaffected and keep their exact profile intervals.</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>tidy_ci <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>(</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>(m, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>      z <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tidy</span>(m) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">conf.low  =</span> estimate <span class="sc">-</span> z <span class="sc">*</span> std.error,</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>                        <span class="at">conf.high =</span> estimate <span class="sc">+</span> z <span class="sc">*</span> std.error)</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## The claim being tested</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing* — reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>This is a small, deliberately narrow test of one measurable piece of that story: **does the raw volume of executive orders rise under divided government?**</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## This analysis was pre-registered</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>The hypothesis and the full model specification were frozen **before any data was pulled or seen** — see <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>. That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## What counts as "divided," and where the numbers come from</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>Every number here traces to a public source:</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Executive orders** — the Federal Register API, 1953–2025, counted by signing date.</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Party control of each chamber** — *derived*, not hand-typed, from <span class="co">[</span><span class="ot">voteview.com</span><span class="co">](https://voteview.com)</span> member records (the canonical DW-NOMINATE data).</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Presidential party** — a 14-row administrations table.</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>A year is coded **divided** when the president's party does not control *both* chambers.</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r overview}</span></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>panel <span class="sc">|&gt;</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(control) <span class="sc">|&gt;</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at"># years</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(), <span class="st">`</span><span class="at">avg EOs/yr</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(eo_count), <span class="dv">1</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r timeline}</span></span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a><span class="fu">make_timeline_plot</span>(panel)</span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a><span class="fu">## The result</span></span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r result}</span></span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tidy</span>(nb, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"divided_government"</span>)</span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>irr <span class="ot">&lt;-</span> <span class="fu">exp</span>(res<span class="sc">$</span>estimate); lo <span class="ot">&lt;-</span> <span class="fu">exp</span>(res<span class="sc">$</span>conf.low); hi <span class="ot">&lt;-</span> <span class="fu">exp</span>(res<span class="sc">$</span>conf.high)</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>sig <span class="ot">&lt;-</span> (res<span class="sc">$</span>conf.low <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|</span> (res<span class="sc">$</span>conf.high <span class="sc">&lt;</span> <span class="dv">0</span>)   <span class="co"># CI excludes zero?</span></span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="cf">if</span> (res<span class="sc">$</span>estimate <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="st">"more"</span> <span class="cf">else</span> <span class="st">"fewer"</span></span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>verdict <span class="ot">&lt;-</span> <span class="cf">if</span> (sig <span class="sc">&amp;&amp;</span> res<span class="sc">$</span>estimate <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>  <span class="st">"supports H1: divided government is associated with measurably more executive orders."</span></span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (sig <span class="sc">&amp;&amp;</span> res<span class="sc">$</span>estimate <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>  <span class="st">"runs *against* H1: divided government is associated with measurably fewer executive orders."</span></span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>  <span class="st">"does **not** support H1: the divided-government association is not statistically distinguishable from zero in this sample."</span></span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI <span class="in">`r round(lo,2)`</span>–<span class="in">`r round(hi,2)`</span>) — that is, <span class="in">`r dir`</span> orders.</span>
+<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>**The data `r verdict`**</span>
+<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>Full coefficient table for the primary specification:</span>
+<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r primary-table}</span></span>
+<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(nb, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)))</span>
+<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a><span class="fu">### Robustness</span></span>
+<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a>The pre-registration committed to reporting four specifications, not just the favorable one. The estimated divided-government effect across all of them:</span>
+<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r robustness}</span></span>
+<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">names</span>(models), \(nm) {</span>
+<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_ci</span>(models[[nm]]) <span class="sc">|&gt;</span></span>
+<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"divided_government"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(<span class="at">specification =</span> nm, <span class="at">estimate =</span> <span class="fu">round</span>(estimate, <span class="dv">3</span>),</span>
+<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>              <span class="at">conf.low =</span> <span class="fu">round</span>(conf.low, <span class="dv">3</span>), <span class="at">conf.high =</span> <span class="fu">round</span>(conf.high, <span class="dv">3</span>),</span>
+<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>              <span class="at">p.value =</span> <span class="fu">round</span>(p.value, <span class="dv">3</span>))</span>
+<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a>**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years — about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern — some presidents simply governed in high-EO eras under unified control — not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.</span>
+<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.</span>
+<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## What this does and doesn't show</span></span>
+<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Counts ≠ significance.** This measures the *volume* of unilateral action, not its weight. A single consequential order and a routine administrative one count the same. Raw counts are known to undercount the orders that matter most.</span>
+<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.</span>
+<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.</span>
+<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.</span>
+<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reproduce this</span></span>
+<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_pull_executive_orders.R     <span class="co"># pull EOs from the Federal Register</span></span>
+<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_build_divided_government.R   <span class="co"># derive chamber control from voteview</span></span>
+<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render report.qmd                  <span class="co"># rebuild this page</span></span>
+<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a>Everything above regenerates from public data. Full method: <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
