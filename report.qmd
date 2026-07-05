@@ -48,22 +48,22 @@ tidy_ci <- function(m) {
 
 ## The claim being tested
 
-A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing* — reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).
+A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing*, reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).
 
 This is a small, deliberately narrow test of one measurable piece of that story: **does the raw volume of executive orders rise under divided government?**
 
 ::: {.callout-note}
 ## This analysis was pre-registered
-The hypothesis and the full model specification were frozen **before any data was pulled or seen** — see [`PRE_REGISTRATION.md`](PRE_REGISTRATION.md). That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.
+The hypothesis and the full model specification were frozen **before any data was pulled or seen**. See [`PRE_REGISTRATION.md`](PRE_REGISTRATION.md). That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.
 :::
 
 ## What counts as "divided," and where the numbers come from
 
 Every number here traces to a public source:
 
-- **Executive orders** — the complete 1953–2025 record, counted by signing date. The Federal Register's search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.
-- **Party control of each chamber** — hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against [voteview.com](https://voteview.com) DW-NOMINATE records.
-- **Presidential party** — a 14-row administrations table.
+- **Executive orders**: the complete 1953–2025 record, counted by signing date. The Federal Register's search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.
+- **Party control of each chamber**: hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against [voteview.com](https://voteview.com) DW-NOMINATE records.
+- **Presidential party**: a 14-row administrations table.
 
 A year is coded **divided** when the president's party does not control *both* chambers.
 
@@ -93,11 +93,11 @@ verdict <- if (sig && res$estimate > 0) {
 }
 ```
 
-In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI `r round(lo,2)`–`r round(hi,2)`) — that is, `r dir` orders.
+In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI `r round(lo,2)`–`r round(hi,2)`), that is, `r dir` orders.
 
 **The data `r verdict`**
 
-This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer" — see the Bottom line.
+This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer." See the Bottom line.
 
 Full coefficient table for the primary specification:
 
@@ -120,7 +120,7 @@ purrr::map_dfr(names(models), \(nm) {
 })
 ```
 
-**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years — about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern — some presidents simply governed in high-EO eras under unified control — not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.
+**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years, about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.
 
 **Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.
 
@@ -130,7 +130,7 @@ purrr::map_dfr(names(models), \(nm) {
 - **EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.
 - **Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.
 - **Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.
-- **Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap — which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.
+- **Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap, which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.
 
 ## Reproduce this
 

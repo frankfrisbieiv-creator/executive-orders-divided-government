@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Frank Frisbie">
-<meta name="dcterms.date" content="2026-06-30">
+<meta name="dcterms.date" content="2026-07-05">
 
 <title>Do Presidents Govern by Decree When They Lose Congress?</title>
 <style>
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 30, 2026</p>
+      <p class="date">July 5, 2026</p>
     </div>
   </div>
   
@@ -164,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="the-claim-being-tested" class="level2">
 <h2 class="anchored" data-anchor-id="the-claim-being-tested">The claim being tested</h2>
-<p>A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start <em>decreeing</em> — reaching for the executive order to act without lawmakers. It’s intuitive, it’s repeated constantly, and it has serious scholarship behind it (Howell, <em>Power Without Persuasion</em>; Mayer, <em>With the Stroke of a Pen</em>).</p>
+<p>A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start <em>decreeing</em>, reaching for the executive order to act without lawmakers. It’s intuitive, it’s repeated constantly, and it has serious scholarship behind it (Howell, <em>Power Without Persuasion</em>; Mayer, <em>With the Stroke of a Pen</em>).</p>
 <p>This is a small, deliberately narrow test of one measurable piece of that story: <strong>does the raw volume of executive orders rise under divided government?</strong></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -176,7 +176,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The hypothesis and the full model specification were frozen <strong>before any data was pulled or seen</strong> — see <a href="PRE_REGISTRATION.md"><code>PRE_REGISTRATION.md</code></a>. That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.</p>
+<p>The hypothesis and the full model specification were frozen <strong>before any data was pulled or seen</strong>. See <a href="PRE_REGISTRATION.md"><code>PRE_REGISTRATION.md</code></a>. That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.</p>
 </div>
 </div>
 </section>
@@ -184,9 +184,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="what-counts-as-divided-and-where-the-numbers-come-from">What counts as “divided,” and where the numbers come from</h2>
 <p>Every number here traces to a public source:</p>
 <ul>
-<li><strong>Executive orders</strong> — the complete 1953–2025 record, counted by signing date. The Federal Register’s search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.</li>
-<li><strong>Party control of each chamber</strong> — hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against <a href="https://voteview.com">voteview.com</a> DW-NOMINATE records.</li>
-<li><strong>Presidential party</strong> — a 14-row administrations table.</li>
+<li><strong>Executive orders</strong>: the complete 1953–2025 record, counted by signing date. The Federal Register’s search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.</li>
+<li><strong>Party control of each chamber</strong>: hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against <a href="https://voteview.com">voteview.com</a> DW-NOMINATE records.</li>
+<li><strong>Presidential party</strong>: a 14-row administrations table.</li>
 </ul>
 <p>A year is coded <strong>divided</strong> when the president’s party does not control <em>both</em> chambers.</p>
 <div class="cell">
@@ -259,9 +259,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>In the pre-registered primary model (negative binomial), a divided-government year is associated with about <strong>0.8×</strong> the executive-order rate of a unified-government year (95% CI 0.68–0.94) — that is, fewer orders.</p>
+<p>In the pre-registered primary model (negative binomial), a divided-government year is associated with about <strong>0.8×</strong> the executive-order rate of a unified-government year (95% CI 0.68–0.94), that is, fewer orders.</p>
 <p><strong>The data runs <em>against</em> H1: divided government is associated with measurably fewer executive orders.</strong></p>
-<p>This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is “no reliable effect,” not “fewer” — see the Bottom line.</p>
+<p>This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is “no reliable effect,” not “fewer.” See the Bottom line.</p>
 <p>Full coefficient table for the primary specification:</p>
 <div class="cell">
 <details class="code-fold">
@@ -394,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p><strong>Reading across specifications.</strong> In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years — about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted <em>more</em> unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern — some presidents simply governed in high-EO eras under unified control — not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean “more division, fewer orders” gradient.</p>
+<p><strong>Reading across specifications.</strong> In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years, about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted <em>more</em> unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean “more division, fewer orders” gradient.</p>
 <p><strong>Bottom line.</strong> The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.</p>
 </section>
 </section>
@@ -405,7 +405,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>EOs are one channel.</strong> Memoranda and proclamations are other unilateral tools, out of scope here.</li>
 <li><strong>Small sample.</strong> ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.</li>
 <li><strong>Mid-Congress control flips</strong> (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.</li>
-<li><strong>Completeness was the hard part.</strong> An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API’s pre-1994 gap — which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.</li>
+<li><strong>Completeness was the hard part.</strong> An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API’s pre-1994 gap, which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.</li>
 </ul>
 </section>
 <section id="reproduce-this" class="level2">
@@ -921,22 +921,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## The claim being tested</span></span>
 <span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing* — reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>A familiar story about American politics: when a president faces a Congress controlled by the other party, they stop legislating and start *decreeing*, reaching for the executive order to act without lawmakers. It's intuitive, it's repeated constantly, and it has serious scholarship behind it (Howell, *Power Without Persuasion*; Mayer, *With the Stroke of a Pen*).</span>
 <span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>This is a small, deliberately narrow test of one measurable piece of that story: **does the raw volume of executive orders rise under divided government?**</span>
 <span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
 <span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## This analysis was pre-registered</span></span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>The hypothesis and the full model specification were frozen **before any data was pulled or seen** — see <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>. That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>The hypothesis and the full model specification were frozen **before any data was pulled or seen**. See <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>. That means the result below was not reverse-engineered to be interesting. A clean null is reported as honestly as a clean positive.</span>
 <span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## What counts as "divided," and where the numbers come from</span></span>
 <span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>Every number here traces to a public source:</span>
 <span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Executive orders** — the complete 1953–2025 record, counted by signing date. The Federal Register's search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Party control of each chamber** — hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against <span class="co">[</span><span class="ot">voteview.com</span><span class="co">](https://voteview.com)</span> DW-NOMINATE records.</span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Presidential party** — a 14-row administrations table.</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Executive orders**: the complete 1953–2025 record, counted by signing date. The Federal Register's search API only has full coverage from 1994 on, so the pipeline combines its pre-1994 disposition tables with the 1994+ API, then validates per-president totals against published counts and refuses to run if the data is incomplete.</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Party control of each chamber**: hand-verified per Congress (to correctly handle caucusing independents and VP-tiebreak Senates that a naive party count miscodes), and independently cross-checked against <span class="co">[</span><span class="ot">voteview.com</span><span class="co">](https://voteview.com)</span> DW-NOMINATE records.</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Presidential party**: a 14-row administrations table.</span>
 <span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>A year is coded **divided** when the president's party does not control *both* chambers.</span>
 <span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a></span>
@@ -966,11 +966,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI <span class="in">`r round(lo,2)`</span>–<span class="in">`r round(hi,2)`</span>) — that is, <span class="in">`r dir`</span> orders.</span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI <span class="in">`r round(lo,2)`</span>–<span class="in">`r round(hi,2)`</span>), that is, <span class="in">`r dir`</span> orders.</span>
 <span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>**The data `r verdict`**</span>
 <span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer" — see the Bottom line.</span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer." See the Bottom line.</span>
 <span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a>Full coefficient table for the primary specification:</span>
 <span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a></span>
@@ -993,7 +993,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years — about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern — some presidents simply governed in high-EO eras under unified control — not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.</span>
+<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years, about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.</span>
 <span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.</span>
 <span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a></span>
@@ -1003,7 +1003,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.</span>
 <span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.</span>
 <span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.</span>
-<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap — which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.</span>
+<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap, which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.</span>
 <span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reproduce this</span></span>
 <span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a></span>
