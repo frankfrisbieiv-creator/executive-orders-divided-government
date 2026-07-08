@@ -93,11 +93,9 @@ verdict <- if (sig && res$estimate > 0) {
 }
 ```
 
-In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI `r round(lo,2)`–`r round(hi,2)`), that is, `r dir` orders.
+**The cleanest specification shows no reliable effect.** Comparing each president against himself with president fixed effects, moving between unified and divided control is associated with essentially no change in how many executive orders a president issues (within-president estimate −0.07, 95% CI includes zero). The popular claim that presidents govern by decree when they lose Congress is not supported here.
 
-**The data `r verdict`**
-
-This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer." See the Bottom line.
+The pooled estimate points the other way, and does not survive that check. In the pre-registered primary model (pooled negative binomial), a divided-government year carries about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI `r round(lo,2)`–`r round(hi,2)`), that is, `r dir` orders. Taken by itself, the data `r verdict` But it is the pooled estimate only: it does not survive president fixed effects, so it is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The conclusion the analysis lands on is "no reliable effect," not "fewer."
 
 Full coefficient table for the primary specification:
 
