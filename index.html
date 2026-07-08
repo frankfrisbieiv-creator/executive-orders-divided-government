@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Frank Frisbie">
-<meta name="dcterms.date" content="2026-07-05">
+<meta name="dcterms.date" content="2026-07-08">
 
 <title>Do Presidents Govern by Decree When They Lose Congress?</title>
 <style>
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 5, 2026</p>
+      <p class="date">July 8, 2026</p>
     </div>
   </div>
   
@@ -259,9 +259,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>In the pre-registered primary model (negative binomial), a divided-government year is associated with about <strong>0.8×</strong> the executive-order rate of a unified-government year (95% CI 0.68–0.94), that is, fewer orders.</p>
-<p><strong>The data runs <em>against</em> H1: divided government is associated with measurably fewer executive orders.</strong></p>
-<p>This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is “no reliable effect,” not “fewer.” See the Bottom line.</p>
+<p><strong>The cleanest specification shows no reliable effect.</strong> Comparing each president against himself with president fixed effects, moving between unified and divided control is associated with essentially no change in how many executive orders a president issues (within-president estimate −0.07, 95% CI includes zero). The popular claim that presidents govern by decree when they lose Congress is not supported here.</p>
+<p>The pooled estimate points the other way, and does not survive that check. In the pre-registered primary model (pooled negative binomial), a divided-government year carries about <strong>0.8×</strong> the executive-order rate of a unified-government year (95% CI 0.68–0.94), that is, fewer orders. Taken by itself, the data runs <em>against</em> H1: divided government is associated with measurably fewer executive orders. But it is the pooled estimate only: it does not survive president fixed effects, so it is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The conclusion the analysis lands on is “no reliable effect,” not “fewer.”</p>
 <p>Full coefficient table for the primary specification:</p>
 <div class="cell">
 <details class="code-fold">
@@ -966,54 +965,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>In the pre-registered primary model (negative binomial), a divided-government year is associated with about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI <span class="in">`r round(lo,2)`</span>–<span class="in">`r round(hi,2)`</span>), that is, <span class="in">`r dir`</span> orders.</span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>**The cleanest specification shows no reliable effect.** Comparing each president against himself with president fixed effects, moving between unified and divided control is associated with essentially no change in how many executive orders a president issues (within-president estimate −0.07, 95% CI includes zero). The popular claim that presidents govern by decree when they lose Congress is not supported here.</span>
 <span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>**The data `r verdict`**</span>
+<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>The pooled estimate points the other way, and does not survive that check. In the pre-registered primary model (pooled negative binomial), a divided-government year carries about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI <span class="in">`r round(lo,2)`</span>–<span class="in">`r round(hi,2)`</span>), that is, <span class="in">`r dir`</span> orders. Taken by itself, the data <span class="in">`r verdict`</span> But it is the pooled estimate only: it does not survive president fixed effects, so it is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The conclusion the analysis lands on is "no reliable effect," not "fewer."</span>
 <span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>This is the pooled estimate only. It does not survive the fixed-effects check below, so the conclusion the analysis lands on is "no reliable effect," not "fewer." See the Bottom line.</span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>Full coefficient table for the primary specification:</span>
 <span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a>Full coefficient table for the primary specification:</span>
-<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{r primary-table}</span></span>
-<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(nb, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)))</span>
-<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r primary-table}</span></span>
+<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(nb, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)))</span>
+<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a><span class="fu">### Robustness</span></span>
 <span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a><span class="fu">### Robustness</span></span>
+<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a>The pre-registration committed to reporting four specifications, not just the favorable one. The estimated divided-government effect across all of them:</span>
 <span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>The pre-registration committed to reporting four specifications, not just the favorable one. The estimated divided-government effect across all of them:</span>
-<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r robustness}</span></span>
-<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">names</span>(models), \(nm) {</span>
-<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_ci</span>(models[[nm]]) <span class="sc">|&gt;</span></span>
-<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"divided_government"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(<span class="at">specification =</span> nm, <span class="at">estimate =</span> <span class="fu">round</span>(estimate, <span class="dv">3</span>),</span>
-<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>              <span class="at">conf.low =</span> <span class="fu">round</span>(conf.low, <span class="dv">3</span>), <span class="at">conf.high =</span> <span class="fu">round</span>(conf.high, <span class="dv">3</span>),</span>
-<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a>              <span class="at">p.value =</span> <span class="fu">round</span>(p.value, <span class="dv">3</span>))</span>
-<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r robustness}</span></span>
+<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">names</span>(models), \(nm) {</span>
+<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_ci</span>(models[[nm]]) <span class="sc">|&gt;</span></span>
+<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"divided_government"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(<span class="at">specification =</span> nm, <span class="at">estimate =</span> <span class="fu">round</span>(estimate, <span class="dv">3</span>),</span>
+<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>              <span class="at">conf.low =</span> <span class="fu">round</span>(conf.low, <span class="dv">3</span>), <span class="at">conf.high =</span> <span class="fu">round</span>(conf.high, <span class="dv">3</span>),</span>
+<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>              <span class="at">p.value =</span> <span class="fu">round</span>(p.value, <span class="dv">3</span>))</span>
+<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a>**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years, about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.</span>
 <span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>**Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years, about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.</span>
+<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.</span>
 <span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.</span>
+<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## What this does and doesn't show</span></span>
 <span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a><span class="fu">## What this does and doesn't show</span></span>
-<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Counts ≠ significance.** This measures the *volume* of unilateral action, not its weight. A single consequential order and a routine administrative one count the same. Raw counts are known to undercount the orders that matter most.</span>
-<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.</span>
-<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.</span>
-<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.</span>
-<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap, which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.</span>
+<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Counts ≠ significance.** This measures the *volume* of unilateral action, not its weight. A single consequential order and a routine administrative one count the same. Raw counts are known to undercount the orders that matter most.</span>
+<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**EOs are one channel.** Memoranda and proclamations are other unilateral tools, out of scope here.</span>
+<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Small sample.** ~73 years means wide confidence intervals; that uncertainty is shown, not smoothed over.</span>
+<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Mid-Congress control flips** (e.g., the 2001 Senate) are coded at the Congress level and tested in robustness.</span>
+<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Completeness was the hard part.** An initial pull silently captured only ~1,485 of the ~3,800 orders because of the API's pre-1994 gap, which by itself faked a result. The analysis proceeds only after a per-president completeness check passes.</span>
+<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reproduce this</span></span>
 <span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reproduce this</span></span>
-<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
-<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_pull_executive_orders.R     <span class="co"># pull EOs from the Federal Register</span></span>
-<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_build_divided_government.R   <span class="co"># derive chamber control from voteview</span></span>
-<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render report.qmd                  <span class="co"># rebuild this page</span></span>
-<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-142"><a href="#cb8-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-143"><a href="#cb8-143" aria-hidden="true" tabindex="-1"></a>Everything above regenerates from public data. Full method: <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_pull_executive_orders.R     <span class="co"># pull EOs from the Federal Register</span></span>
+<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_build_divided_government.R   <span class="co"># derive chamber control from voteview</span></span>
+<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render report.qmd                  <span class="co"># rebuild this page</span></span>
+<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a>Everything above regenerates from public data. Full method: <span class="co">[</span><span class="ot">`PRE_REGISTRATION.md`</span><span class="co">](PRE_REGISTRATION.md)</span>.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
