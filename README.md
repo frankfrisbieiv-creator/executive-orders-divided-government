@@ -1,5 +1,7 @@
 # Executive Orders & Divided Government
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21270973.svg)](https://doi.org/10.5281/zenodo.21270973)
+
 A small, reproducible test of one falsifiable claim: **do presidents issue more executive orders when they don't control Congress?**
 
 The deliverable is the reproducibility. Every number traces to a public source; the hypothesis and model were frozen *before* the data was pulled (see `PRE_REGISTRATION.md`).

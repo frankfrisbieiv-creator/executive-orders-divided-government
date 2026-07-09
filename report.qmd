@@ -181,3 +181,7 @@ quarto render report.qmd                  # rebuild this page
 ```
 
 Everything above regenerates from public data. Full method: [`PRE_REGISTRATION.md`](PRE_REGISTRATION.md).
+
+---
+
+**Cite this:** Frisbie, F. (2026). *Do Presidents Govern by Decree When They Lose Congress?* (v1.0.0). Zenodo. <https://doi.org/10.5281/zenodo.21270973>
