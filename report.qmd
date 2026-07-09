@@ -93,7 +93,7 @@ verdict <- if (sig && res$estimate > 0) {
 }
 ```
 
-**The cleanest specification shows no reliable effect.** Comparing each president against himself with president fixed effects, moving between unified and divided control is associated with essentially no change in how many executive orders a president issues (within-president estimate −0.07, 95% CI includes zero). The popular claim that presidents govern by decree when they lose Congress is not supported here.
+**The cleanest specification shows no reliable effect.** Comparing each president against himself with president fixed effects, moving between unified and divided control is associated with essentially no change in how many executive orders a president issues (within-president estimate −0.07, 95% CI includes zero). The popular claim that presidents govern by decree when they lose Congress is not supported here. That null is not bulletproof, though: it turns on how a handful of transition years are coded, which the section [How fragile is this null?](#how-fragile-is-this-null) works through in full.
 
 The pooled estimate points the other way, and does not survive that check. In the pre-registered primary model (pooled negative binomial), a divided-government year carries about **`r round(irr, 2)`×** the executive-order rate of a unified-government year (95% CI `r round(lo,2)`–`r round(hi,2)`), that is, `r dir` orders. Taken by itself, the data `r verdict` But it is the pooled estimate only: it does not survive president fixed effects, so it is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The conclusion the analysis lands on is "no reliable effect," not "fewer."
 
@@ -120,7 +120,49 @@ purrr::map_dfr(names(models), \(nm) {
 
 **Reading across specifications.** In the pooled models (negative binomial, Poisson, OLS), divided-government years carry a lower executive-order rate than unified years, about 0.80× in the primary model, statistically distinguishable from zero. That already cuts against H1, which predicted *more* unilateral action under divided government. But the effect does not survive president fixed effects: within a given presidency, moving between unified and divided control is associated with essentially no change (−0.07, 95% CI includes zero). As the pre-registration flagged in advance, an effect that appears pooled but vanishes within-president is best read as a between-president composition pattern (some presidents simply governed in high-EO eras under unified control), not as evidence that divided government itself changes how often a president reaches for the pen. The raw averages agree: opposition-Congress years (48.2/yr) edge out split-Congress years (43.6/yr), so there is no clean "more division, fewer orders" gradient.
 
-**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here. If anything the pooled association runs the other way, but it is not robust, and the cleanest within-president estimate shows no reliable effect in either direction.
+**Bottom line.** The popular claim that presidents govern by decree when they lose Congress is not supported here: the pooled association runs the other way (fewer, not more), and it does not survive president fixed effects. But this null is not robust to coding choices. An independent coding disagrees with ours on three of seventy-three years, and adopting it in full would flip the fixed-effects estimate to a significant negative effect. The honest read, developed in the next section, is that **neither the effect nor its absence is robust to how a handful of transition years are coded.**
+
+## How fragile is this null?
+
+```{r sensitivity}
+suppressPackageStartupMessages(library(MASS))
+cap <- read_csv("data/cap_divided_government.csv", show_col_types = FALSE)
+fe_irrp <- function(p){ m <- glm.nb(update(EO_FORMULA, . ~ . + factor(president)), data = p)
+  s <- coef(summary(m))["divided_government", ]; c(irr = exp(unname(s[1])), p = unname(s[4])) }
+setyr <- function(p, yrs, v){ p$divided_government[p$year %in% yrs] <- v; p }
+panel_cap <- panel; panel_cap$divided_government <- cap$cap_divided[match(panel$year, cap$year)]
+fe_ours <- fe_irrp(panel)
+fe_j    <- fe_irrp(setyr(panel, c(2001,2002), 0))   # CAP's Jeffords convention only
+fe_2018 <- fe_irrp(setyr(panel, 2018, 1))           # CAP's 2018 only
+fe_cap  <- fe_irrp(panel_cap)                        # full CAP coding
+irrp <- function(x) sprintf("IRR %.3f, p = %.3f", x["irr"], x["p"])
+```
+
+To see how sturdy the "no reliable effect" conclusion is, I checked it against an **independent coding** of the same orders: the Comparative Agendas Project executive-orders dataset (1945-2025), which codes each order with its own divided-government flag. Collapsed to the year level, **it agrees with our coding on 70 of 73 years.** But the three disagreements are enough to move the headline.
+
+Under our coding, the president-fixed-effects estimate shows **no reliable effect** (`r irrp(fe_ours)`). Under CAP's full coding, the same model would show a **statistically significant negative effect** (`r irrp(fe_cap)`), which would overturn the headline from "no reliable effect" to "reliably fewer orders under divided government."
+
+Because the disagreement is only three years, it is worth seeing exactly how each one moves the fixed-effects estimate:
+
+```{r sensitivity-table}
+tibble::tibble(
+  Coding = c("Ours (hand-coded control)",
+             "+ CAP's 2001-2002 (Jeffords) only",
+             "+ CAP's 2018 only",
+             "Full CAP coding (all three years)"),
+  `IRR (divided govt)` = round(c(fe_ours["irr"], fe_j["irr"], fe_2018["irr"], fe_cap["irr"]), 3),
+  `p-value` = round(c(fe_ours["p"], fe_j["p"], fe_2018["p"], fe_cap["p"]), 3),
+  `Reliable effect?` = c("no", "no", "no", "yes (negative)"))
+```
+
+Adopting CAP's 2001-2002 coding alone leaves the null intact (p = `r sprintf("%.3f", fe_j["p"])`). Adopting CAP's 2018 coding alone leaves it intact (p = `r sprintf("%.3f", fe_2018["p"])`). Only both together cross into significance (p = `r sprintf("%.3f", fe_cap["p"])`).
+
+Our reasoning, without hedging:
+
+- **2001-2002 is a genuine convention difference.** CAP codes by which party *organized* the chamber; we hand-code *actual* control. After Senator Jeffords left the Republican caucus in mid-2001, the Senate was Democratic-controlled, so we code 2001-2002 as divided. This choice was frozen in advance (pre-registration, limitation 3), not chosen to produce a result.
+- **2018 is not a convention difference. It is an apparent error.** 2018 falls in the 115th Congress, which was unified Republican control. CAP files 2018's orders under the 116th Congress, which did not convene until January 2019. We do not adopt a coding we believe is mistaken in order to obtain significance.
+
+So the null **survives every individually defensible recoding, and breaks only under a combination that includes the apparent error.** That is the most defensible reading of the evidence. But the plain fact that a three-year recoding in a seventy-three-year series can flip the result means the honest conclusion is the one stated above: **neither the effect nor its absence is robust to coding choices.** A longer series, or a settled convention for mid-Congress control flips, would be needed to say more.
 
 ## What this does and doesn't show
 
